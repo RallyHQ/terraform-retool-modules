@@ -596,3 +596,13 @@ variable "alb_egress_rules" {
   ]
   description = "Egress rules for load balancer"
 }
+
+variable "encryption_key" {
+  type        = string
+  description = "ENCRYPTION_KEY"
+}
+
+variable "jwt_secret" {
+  type        = string
+  description = "JWT_SECRET"
+}
