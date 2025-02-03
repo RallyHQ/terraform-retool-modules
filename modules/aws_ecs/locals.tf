@@ -99,7 +99,7 @@ locals {
       },
       {
         "name" : "WORKFLOW_TEMPORAL_CLUSTER_FRONTEND_HOST",
-        "value" : format("%s.%s", var.temporal_cluster_config.hostname, local.service_discovery_namespace)
+        "value" : var.use_existing_temporal_cluster ? var.temporal_cluster_config.hostname : format("%s.%s", var.temporal_cluster_config.hostname, local.service_discovery_namespace)
       },
       {
         "name" : "WORKFLOW_TEMPORAL_CLUSTER_FRONTEND_PORT",
