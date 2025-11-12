@@ -78,11 +78,11 @@ locals {
       },
       {
         "name" : "JWT_SECRET",
-        "value" : random_string.jwt_secret.result
+        "value" : var.jwt_secret
       },
       {
         "name" : "ENCRYPTION_KEY",
-        "value" : random_string.encryption_key.result
+        "value" : var.encryption_key
       },
       {
         "name" : "LICENSE_KEY",
@@ -99,7 +99,7 @@ locals {
       },
       {
         "name" : "WORKFLOW_TEMPORAL_CLUSTER_FRONTEND_HOST",
-        "value" : format("%s.%s", var.temporal_cluster_config.hostname, local.service_discovery_namespace)
+        "value" : var.use_existing_temporal_cluster ? var.temporal_cluster_config.hostname : format("%s.%s", var.temporal_cluster_config.hostname, local.service_discovery_namespace)
       },
       {
         "name" : "WORKFLOW_TEMPORAL_CLUSTER_FRONTEND_PORT",

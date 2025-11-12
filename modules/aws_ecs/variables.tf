@@ -608,3 +608,13 @@ variable "iam_partition" {
   description = "AWS Commercial accounts use 'aws'. AWS GovCloud accounts use 'aws-us-gov'"
   default     = "aws"
 }
+
+variable "encryption_key" {
+  type        = string
+  description = "ENCRYPTION_KEY"
+}
+
+variable "jwt_secret" {
+  type        = string
+  description = "JWT_SECRET"
+}
