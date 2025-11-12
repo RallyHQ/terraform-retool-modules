@@ -694,6 +694,7 @@ module "temporal" {
   temporal_aurora_backup_retention_period      = var.temporal_aurora_backup_retention_period
   temporal_aurora_preferred_backup_window      = var.temporal_aurora_preferred_backup_window
   temporal_aurora_instances                    = var.temporal_aurora_instances
+  temporal_image                               = var.temporal_image
   aws_region                                   = var.aws_region
   aws_ecs_cluster_id                           = aws_ecs_cluster.this.id
   launch_type                                  = var.launch_type
@@ -701,4 +702,5 @@ module "temporal" {
   aws_ecs_capacity_provider_name               = var.launch_type == "EC2" ? aws_ecs_capacity_provider.this[0].name : null
   task_propagate_tags                          = var.task_propagate_tags
   service_discovery_namespace                  = local.service_discovery_namespace
+  iam_partition                                = var.iam_partition
 }

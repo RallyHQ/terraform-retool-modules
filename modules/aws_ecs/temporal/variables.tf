@@ -148,8 +148,8 @@ variable "private_dns_namespace_id" {
 
 variable "temporal_image" {
   type        = string
-  default     = "tryretool/one-offs:retool-temporal-1.1.2"
-  description = "Docker image to use for Temporal cluster."
+  description = "Docker image for Temporal"
+  default     = "tryretool/one-offs:retool-temporal-1.1.5"
 }
 
 variable "secret_length" {
@@ -209,4 +209,10 @@ variable "task_propagate_tags" {
 variable "service_discovery_namespace" {
   type        = string
   description = "Service discovery namespace DNS name for Retool ECS cluster."
+}
+
+variable "iam_partition" {
+  type        = string
+  description = "AWS Commercial accounts use 'aws'. AWS GovCloud accounts use 'aws-us-gov'"
+  default     = "aws"
 }

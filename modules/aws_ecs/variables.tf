@@ -187,8 +187,8 @@ variable "rds_instance_class" {
 
 variable "rds_instance_engine_version" {
   type        = string
-  default     = "13.15"
-  description = "Version of the Postgres RDS instance. Defaults to 13.15"
+  default     = "15.10"
+  description = "Version of the Postgres RDS instance. Defaults to 15.10"
 }
 
 variable "rds_instance_auto_minor_version_upgrade" {
@@ -326,8 +326,8 @@ variable "temporal_aurora_performance_insights_retention_period" {
 
 variable "temporal_aurora_engine_version" {
   type        = string
-  default     = "14.5"
-  description = "Engine version for Temporal Aurora. Defaults to 14.5."
+  default     = "15.10"
+  description = "Engine version for Temporal Aurora. Defaults to 15.10."
 }
 
 variable "temporal_aurora_serverless_min_capacity" {
@@ -359,6 +359,12 @@ variable "temporal_aurora_instances" {
   default = {
     one = {}
   }
+}
+
+variable "temporal_image" {
+  type        = string
+  description = "Docker image for Temporal"
+  default     = "tryretool/one-offs:retool-temporal-1.1.5"
 }
 
 variable "workflows_enabled" {
@@ -595,6 +601,12 @@ variable "alb_egress_rules" {
     }
   ]
   description = "Egress rules for load balancer"
+}
+
+variable "iam_partition" {
+  type        = string
+  description = "AWS Commercial accounts use 'aws'. AWS GovCloud accounts use 'aws-us-gov'"
+  default     = "aws"
 }
 
 variable "encryption_key" {
