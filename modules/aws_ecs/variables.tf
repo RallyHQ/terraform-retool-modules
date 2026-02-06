@@ -75,14 +75,14 @@ variable "retool_license_key" {
 
 variable "ecs_retool_image" {
   type        = string
-  description = "Container image for desired Retool version. Defaults to `3.114.2-stable`"
-  default     = "tryretool/backend:3.114.2-stable"
+  description = "Container image for desired Retool version. Defaults to `3.253.8-stable`"
+  default     = "tryretool/backend:3.253.8-stable"
 }
 
 variable "ecs_code_executor_image" {
   type        = string
-  description = "Container image for desired code_executor version. Defaults to `3.114.2-stable`"
-  default     = "tryretool/code-executor-service:3.114.2-stable"
+  description = "Container image for desired code_executor version. Defaults to `3.253.8-stable`"
+  default     = "tryretool/code-executor-service:3.253.8-stable"
 }
 
 variable "ecs_telemetry_image" {
@@ -111,6 +111,14 @@ variable "ecs_task_resource_map" {
       cpu    = 1024
       memory = 2048
     },
+    agent_worker = {
+      cpu    = 2048
+      memory = 4096
+    }
+    agent_eval_worker = {
+      cpu    = 2048
+      memory = 4096
+    }
     workflows_backend = {
       cpu    = 2048
       memory = 4096
@@ -364,7 +372,7 @@ variable "temporal_aurora_instances" {
 variable "temporal_image" {
   type        = string
   description = "Docker image for Temporal"
-  default     = "tryretool/one-offs:retool-temporal-1.1.5"
+  default     = "tryretool/one-offs:retool-temporal-1.1.6"
 }
 
 variable "workflows_enabled" {
@@ -617,4 +625,10 @@ variable "encryption_key" {
 variable "jwt_secret" {
   type        = string
   description = "JWT_SECRET"
+}
+
+variable "agents_enabled" {
+  type        = bool
+  default     = false
+  description = "Whether to enable agent services. Defaults to false."
 }
