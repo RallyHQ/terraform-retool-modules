@@ -21,6 +21,8 @@ resource "aws_security_group" "rds" {
     ]
     ipv6_cidr_blocks = ["::/0"]
   }
+
+  tags = var.tags
 }
 
 resource "aws_security_group" "temporal_aurora" {
@@ -36,6 +38,8 @@ resource "aws_security_group" "temporal_aurora" {
     protocol    = "tcp"
     cidr_blocks = [data.aws_vpc.selected.cidr_block]
   }
+
+  tags = var.tags
 }
 
 
@@ -68,6 +72,8 @@ resource "aws_security_group" "alb" {
       ipv6_cidr_blocks = egress.value["ipv6_cidr_blocks"]
     }
   }
+
+  tags = var.tags
 }
 
 resource "aws_security_group" "containers" {
@@ -87,6 +93,8 @@ resource "aws_security_group" "containers" {
       ipv6_cidr_blocks = egress.value["ipv6_cidr_blocks"]
     }
   }
+
+  tags = var.tags
 }
 
 resource "aws_vpc_security_group_ingress_rule" "variable_rules" {
@@ -99,6 +107,8 @@ resource "aws_vpc_security_group_ingress_rule" "variable_rules" {
   ip_protocol       = each.value["protocol"]
   cidr_ipv4         = each.value["cidr_block"]
   cidr_ipv6         = each.value["ipv6_cidr_block"]
+
+  tags = var.tags
 }
 
 resource "aws_vpc_security_group_ingress_rule" "containers_self_ingress" {
@@ -107,4 +117,6 @@ resource "aws_vpc_security_group_ingress_rule" "containers_self_ingress" {
   description                  = "Allow self-ingress for inter-container communication"
   referenced_security_group_id = aws_security_group.containers.id
   ip_protocol                  = -1
+
+  tags = var.tags
 }

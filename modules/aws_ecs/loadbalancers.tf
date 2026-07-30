@@ -6,6 +6,8 @@ resource "aws_lb" "this" {
   subnets         = var.private_subnet_ids
 
   internal = true
+
+  tags = var.tags
 }
 
 resource "aws_lb_listener" "this" {
@@ -18,6 +20,8 @@ resource "aws_lb_listener" "this" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.this.arn
   }
+
+  tags = var.tags
 }
 
 resource "aws_lb_listener" "this_redirect" {
@@ -35,6 +39,8 @@ resource "aws_lb_listener" "this_redirect" {
       status_code = "HTTP_301"
     }
   }
+
+  tags = var.tags
 }
 
 resource "aws_lb_listener_rule" "this" {
@@ -52,6 +58,8 @@ resource "aws_lb_listener_rule" "this" {
       values = ["/"]
     }
   }
+
+  tags = var.tags
 }
 
 resource "aws_lb_target_group" "this" {
@@ -70,4 +78,6 @@ resource "aws_lb_target_group" "this" {
     healthy_threshold   = 3
     unhealthy_threshold = 2
   }
+
+  tags = var.tags
 }
