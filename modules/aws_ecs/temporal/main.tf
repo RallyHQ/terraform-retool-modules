@@ -40,6 +40,8 @@ module "temporal_aurora_rds" {
 
   backup_retention_period = var.temporal_aurora_backup_retention_period
   preferred_backup_window = var.temporal_aurora_preferred_backup_window
+
+  tags = var.tags
 }
 
 resource "aws_service_discovery_service" "temporal_frontend_service" {
@@ -59,6 +61,8 @@ resource "aws_service_discovery_service" "temporal_frontend_service" {
   health_check_custom_config {
     failure_threshold = 1
   }
+
+  tags = var.tags
 }
 
 resource "aws_ecs_service" "retool_temporal" {
@@ -70,6 +74,7 @@ resource "aws_ecs_service" "retool_temporal" {
   desired_count   = 1
   task_definition = aws_ecs_task_definition.retool_temporal[each.key].arn
   propagate_tags  = var.task_propagate_tags
+  tags            = var.tags
 
   # Need to explictly set this in aws_ecs_service to avoid destructive behavior: https://github.com/hashicorp/terraform-provider-aws/issues/22823
   capacity_provider_strategy {
@@ -157,4 +162,6 @@ resource "aws_ecs_task_definition" "retool_temporal" {
       }
     ]
   )
+
+  tags = var.tags
 }

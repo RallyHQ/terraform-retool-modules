@@ -13,6 +13,8 @@ resource "aws_iam_role" "task_role" {
   name               = "${var.deployment_name}-task-role"
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
   path               = "/"
+
+  tags = var.tags
 }
 
 data "aws_iam_policy_document" "service_role_assume_policy" {
@@ -50,6 +52,8 @@ resource "aws_iam_role" "service_role" {
     name   = "${var.deployment_name}-service-policy"
     policy = data.aws_iam_policy_document.service_role_policy.json
   }
+
+  tags = var.tags
 }
 
 # Execution Role for Fargate
@@ -68,6 +72,8 @@ resource "aws_iam_role" "execution_role" {
   count              = var.launch_type == "FARGATE" ? 1 : 0
   name               = "${var.deployment_name}-execution-role"
   assume_role_policy = data.aws_iam_policy_document.execution_role_assume_policy.json
+
+  tags = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "execution_role" {

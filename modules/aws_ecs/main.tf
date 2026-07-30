@@ -14,11 +14,15 @@ data "aws_vpc" "selected" {
 resource "aws_cloudwatch_log_group" "this" {
   name              = "${var.deployment_name}-ecs-log-group"
   retention_in_days = var.log_retention_in_days
+
+  tags = var.tags
 }
 
 resource "aws_db_subnet_group" "this" {
   name       = "${var.deployment_name}-retool"
   subnet_ids = var.private_subnet_ids
+
+  tags = var.tags
 }
 
 resource "aws_db_instance" "this" {
@@ -45,6 +49,8 @@ resource "aws_db_instance" "this" {
 
   skip_final_snapshot = true
   apply_immediately   = true
+
+  tags = var.tags
 }
 
 resource "aws_ecs_service" "retool" {
@@ -57,6 +63,7 @@ resource "aws_ecs_service" "retool" {
   iam_role                           = var.launch_type == "EC2" ? aws_iam_role.service_role.arn : null
   propagate_tags                     = var.task_propagate_tags
   enable_execute_command             = var.enable_execute_command
+  tags                               = var.tags
 
   load_balancer {
     target_group_arn = aws_lb_target_group.this.arn
@@ -91,6 +98,7 @@ resource "aws_ecs_service" "jobs_runner" {
   task_definition        = aws_ecs_task_definition.retool_jobs_runner.arn
   propagate_tags         = var.task_propagate_tags
   enable_execute_command = var.enable_execute_command
+  tags                   = var.tags
 
   # Need to explictly set this in aws_ecs_service to avoid destructive behavior: https://github.com/hashicorp/terraform-provider-aws/issues/22823
   capacity_provider_strategy {
@@ -120,6 +128,7 @@ resource "aws_ecs_service" "workflows_backend" {
   task_definition        = aws_ecs_task_definition.retool_workflows_backend[0].arn
   propagate_tags         = var.task_propagate_tags
   enable_execute_command = var.enable_execute_command
+  tags                   = var.tags
 
   # Need to explictly set this in aws_ecs_service to avoid destructive behavior: https://github.com/hashicorp/terraform-provider-aws/issues/22823
   capacity_provider_strategy {
@@ -153,6 +162,7 @@ resource "aws_ecs_service" "workflows_worker" {
   task_definition        = aws_ecs_task_definition.retool_workflows_worker[0].arn
   propagate_tags         = var.task_propagate_tags
   enable_execute_command = var.enable_execute_command
+  tags                   = var.tags
 
   # Need to explictly set this in aws_ecs_service to avoid destructive behavior: https://github.com/hashicorp/terraform-provider-aws/issues/22823
   capacity_provider_strategy {
@@ -181,6 +191,7 @@ resource "aws_ecs_service" "code_executor" {
   desired_count          = 1
   task_definition        = aws_ecs_task_definition.retool_code_executor[0].arn
   enable_execute_command = var.enable_execute_command
+  tags                   = var.tags
 
   # Need to explictly set this in aws_ecs_service to avoid destructive behavior: https://github.com/hashicorp/terraform-provider-aws/issues/22823
   capacity_provider_strategy {
@@ -214,6 +225,7 @@ resource "aws_ecs_service" "telemetry" {
   task_definition        = aws_ecs_task_definition.retool_telemetry[0].arn
   propagate_tags         = var.task_propagate_tags
   enable_execute_command = var.enable_execute_command
+  tags                   = var.tags
 
   # Need to explictly set this in aws_ecs_service to avoid destructive behavior: https://github.com/hashicorp/terraform-provider-aws/issues/22823
   capacity_provider_strategy {
@@ -282,6 +294,8 @@ resource "aws_ecs_task_definition" "retool_jobs_runner" {
       }
     ]
   ))
+
+  tags = var.tags
 }
 
 resource "aws_ecs_task_definition" "retool" {
@@ -332,6 +346,8 @@ resource "aws_ecs_task_definition" "retool" {
       }
     ]
   ))
+
+  tags = var.tags
 }
 
 resource "aws_ecs_task_definition" "retool_workflows_backend" {
@@ -383,6 +399,8 @@ resource "aws_ecs_task_definition" "retool_workflows_backend" {
       }
     ]
   ))
+
+  tags = var.tags
 }
 
 resource "aws_ecs_task_definition" "retool_workflows_worker" {
@@ -438,6 +456,8 @@ resource "aws_ecs_task_definition" "retool_workflows_worker" {
       }
     ]
   ))
+
+  tags = var.tags
 }
 
 resource "aws_ecs_task_definition" "retool_code_executor" {
@@ -454,12 +474,12 @@ resource "aws_ecs_task_definition" "retool_code_executor" {
     local.common_containers,
     [
       {
-        name       = "retool-code-executor"
-        essential  = true
-        image      = local.ecs_code_executor_image
-        cpu        = var.launch_type == "EC2" ? var.ecs_task_resource_map["code_executor"]["cpu"] : null
-        memory     = var.launch_type == "EC2" ? var.ecs_task_resource_map["code_executor"]["memory"] : null
-        user       = var.launch_type == "EC2" ? null : "1001:1001"
+        name      = "retool-code-executor"
+        essential = true
+        image     = local.ecs_code_executor_image
+        cpu       = var.launch_type == "EC2" ? var.ecs_task_resource_map["code_executor"]["cpu"] : null
+        memory    = var.launch_type == "EC2" ? var.ecs_task_resource_map["code_executor"]["memory"] : null
+        user      = var.launch_type == "EC2" ? null : "1001:1001"
         # required to use nsjail sandboxing, which is required for custom libraries for JS and Python
         # Learn more here: https://docs.retool.com/self-hosted/concepts/architecture#code-executor
         # If not using nsjail sandboxing, update this to be false and use user = "1001:1001"
@@ -486,7 +506,7 @@ resource "aws_ecs_task_definition" "retool_code_executor" {
           local.base_environment_variables,
           [
             {
-              name = "NODE_OPTIONS",
+              name  = "NODE_OPTIONS",
               value = "--max_old_space_size=1024"
             }
           ],
@@ -501,6 +521,8 @@ resource "aws_ecs_task_definition" "retool_code_executor" {
       }
     ]
   ))
+
+  tags = var.tags
 }
 
 resource "aws_ecs_task_definition" "retool_telemetry" {
@@ -584,6 +606,8 @@ resource "aws_ecs_task_definition" "retool_telemetry" {
       }
     ]
   )
+
+  tags = var.tags
 }
 
 resource "aws_service_discovery_private_dns_namespace" "retool_namespace" {
@@ -591,6 +615,8 @@ resource "aws_service_discovery_private_dns_namespace" "retool_namespace" {
   name        = local.service_discovery_namespace
   description = "Service Discovery namespace for Retool deployment"
   vpc         = var.vpc_id
+
+  tags = var.tags
 }
 
 resource "aws_service_discovery_service" "retool_workflow_backend_service" {
@@ -611,6 +637,8 @@ resource "aws_service_discovery_service" "retool_workflow_backend_service" {
   health_check_custom_config {
     failure_threshold = 1
   }
+
+  tags = var.tags
 }
 
 resource "aws_service_discovery_service" "retool_code_executor_service" {
@@ -631,11 +659,13 @@ resource "aws_service_discovery_service" "retool_code_executor_service" {
   health_check_custom_config {
     failure_threshold = 1
   }
+
+  tags = var.tags
 }
 
 resource "aws_service_discovery_service" "retool_telemetry_service" {
   count = var.telemetry_enabled ? 1 : 0
-  name = "telemetry"
+  name  = "telemetry"
 
   dns_config {
     namespace_id = aws_service_discovery_private_dns_namespace.retool_namespace[0].id
@@ -651,6 +681,8 @@ resource "aws_service_discovery_service" "retool_telemetry_service" {
   health_check_custom_config {
     failure_threshold = 1
   }
+
+  tags = var.tags
 }
 
 module "temporal" {
@@ -661,6 +693,7 @@ module "temporal" {
   subnet_ids                  = var.private_subnet_ids
   private_dns_namespace_id    = aws_service_discovery_private_dns_namespace.retool_namespace[0].id
   aws_cloudwatch_log_group_id = aws_cloudwatch_log_group.this.id
+  tags                        = var.tags
   temporal_services_config = {
     frontend = {
       request_port    = 7233,

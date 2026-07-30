@@ -11,6 +11,7 @@ resource "aws_ecs_service" "agent_worker" {
   task_definition        = aws_ecs_task_definition.retool_agent_worker[0].arn
   propagate_tags         = var.task_propagate_tags
   enable_execute_command = var.enable_execute_command
+  tags                   = var.tags
 
   # Need to explictly set this in aws_ecs_service to avoid destructive behavior: https://github.com/hashicorp/terraform-provider-aws/issues/22823
   capacity_provider_strategy {
@@ -40,6 +41,7 @@ resource "aws_ecs_service" "agent_eval_worker" {
   task_definition        = aws_ecs_task_definition.retool_agent_eval_worker[0].arn
   propagate_tags         = var.task_propagate_tags
   enable_execute_command = var.enable_execute_command
+  tags                   = var.tags
 
   # Need to explictly set this in aws_ecs_service to avoid destructive behavior: https://github.com/hashicorp/terraform-provider-aws/issues/22823
   capacity_provider_strategy {
@@ -118,6 +120,8 @@ resource "aws_ecs_task_definition" "retool_agent_worker" {
       }
     ]
   ))
+
+  tags = var.tags
 }
 
 resource "aws_ecs_task_definition" "retool_agent_eval_worker" {
@@ -177,4 +181,6 @@ resource "aws_ecs_task_definition" "retool_agent_eval_worker" {
       }
     ]
   ))
+
+  tags = var.tags
 }

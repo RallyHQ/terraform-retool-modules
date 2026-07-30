@@ -216,3 +216,9 @@ variable "iam_partition" {
   description = "AWS Commercial accounts use 'aws'. AWS GovCloud accounts use 'aws-us-gov'"
   default     = "aws"
 }
+
+variable "tags" {
+  type        = map(string)
+  default     = {}
+  description = "Tags to apply to all resources created by this module."
+}

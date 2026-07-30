@@ -5,6 +5,8 @@ resource "aws_ecs_cluster" "this" {
     name  = "containerInsights"
     value = var.ecs_insights_enabled
   }
+
+  tags = var.tags
 }
 
 # Fargate capacity provider
@@ -107,6 +109,15 @@ resource "aws_autoscaling_group" "this" {
     propagate_at_launch = true
   }
 
+  dynamic "tag" {
+    for_each = var.tags
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
+  }
+
   lifecycle {
     create_before_destroy = true
   }
@@ -141,4 +152,6 @@ resource "aws_ecs_capacity_provider" "this" {
   auto_scaling_group_provider {
     auto_scaling_group_arn = aws_autoscaling_group.this[0].arn
   }
+
+  tags = var.tags
 }

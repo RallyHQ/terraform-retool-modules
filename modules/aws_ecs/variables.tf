@@ -632,3 +632,9 @@ variable "agents_enabled" {
   default     = false
   description = "Whether to enable agent services. Defaults to false."
 }
+
+variable "tags" {
+  type        = map(string)
+  default     = {}
+  description = "Tags to apply to all resources created by this module."
+}
