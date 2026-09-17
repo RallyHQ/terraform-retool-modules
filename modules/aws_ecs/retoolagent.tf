@@ -28,7 +28,7 @@ resource "aws_ecs_service" "agent_worker" {
       security_groups = [
         aws_security_group.containers.id
       ]
-      assign_public_ip = true
+      assign_public_ip = var.assign_public_ip
     }
   }
 }
@@ -58,7 +58,7 @@ resource "aws_ecs_service" "agent_eval_worker" {
       security_groups = [
         aws_security_group.containers.id
       ]
-      assign_public_ip = true
+      assign_public_ip = var.assign_public_ip
     }
   }
 }
