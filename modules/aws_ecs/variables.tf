@@ -181,6 +181,12 @@ variable "ecs_insights_enabled" {
   description = "Whether or not to enable ECS Container Insights. Defaults to `enabled`"
 }
 
+variable "assign_public_ip" {
+  type        = bool
+  default     = true
+  description = "Whether Fargate tasks get a public IPv4 address. Set to `false` when private_subnet_ids are genuinely private, i.e. they reach the internet through a NAT gateway. Defaults to `true` so existing deployments are unchanged."
+}
+
 variable "rds_username" {
   type        = string
   default     = "retool"

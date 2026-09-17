@@ -86,7 +86,7 @@ resource "aws_ecs_service" "retool" {
       security_groups = [
         aws_security_group.containers.id
       ]
-      assign_public_ip = true
+      assign_public_ip = var.assign_public_ip
     }
   }
 }
@@ -115,7 +115,7 @@ resource "aws_ecs_service" "jobs_runner" {
       security_groups = [
         aws_security_group.containers.id
       ]
-      assign_public_ip = true
+      assign_public_ip = var.assign_public_ip
     }
   }
 }
@@ -149,7 +149,7 @@ resource "aws_ecs_service" "workflows_backend" {
       security_groups = [
         aws_security_group.containers.id
       ]
-      assign_public_ip = true
+      assign_public_ip = var.assign_public_ip
     }
   }
 }
@@ -179,7 +179,7 @@ resource "aws_ecs_service" "workflows_worker" {
       security_groups = [
         aws_security_group.containers.id
       ]
-      assign_public_ip = true
+      assign_public_ip = var.assign_public_ip
     }
   }
 }
@@ -212,7 +212,7 @@ resource "aws_ecs_service" "code_executor" {
       security_groups = [
         aws_security_group.containers.id
       ]
-      assign_public_ip = true
+      assign_public_ip = var.assign_public_ip
     }
   }
 }
@@ -246,7 +246,7 @@ resource "aws_ecs_service" "telemetry" {
       security_groups = [
         aws_security_group.containers.id
       ]
-      assign_public_ip = true
+      assign_public_ip = var.assign_public_ip
     }
   }
 }
